@@ -1,0 +1,194 @@
+spring:
+    
+# Database - H2 used by default profile
+
+# JPA properties
+  jpa:
+    hibernate:
+      ddl-auto: update 
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+server:
+  port: 8004
+  cors:
+    origins:
+      - http://localhost:[*]
+      - http://127.0.0.1:[*]
+      - http://*.sitalab.io
+      - https://*.sitalab.io
+      
+# Logging options
+logging:
+  dump-headers: false
+  file: feed-service.log
+  path: logs
+  level:
+    org.springframework: INFO
+    aero.sitalab: DEBUG
+  skip: >
+    equals:/api/v1.0/authentication/health
+  short: >
+    equals:/api/v1.0/authentication/authenticate
+
+# Suppress stack trace on validation error and use the message in the annotation
+server.error.include-stacktrace: never
+server.error.include-message: always
+
+# App properties
+app.name: SmartPath Hub Feed Service
+app.version: 1.0
+app.upk.attributes: type[P],issuing-state,expiration-date,document-number,date-of-birth
+
+# -- below -- updateable via Config API
+# webhook label
+app.agent.label: SITA Feed Service
+app.agent.apikey: sitalab.!s.th3.b35t
+
+# Interface to be used, options are: websocket / webhook / both
+app.use.interface: websocket
+
+# Type of enrolment, options are: true (use biometric token API), false (use enrolment API)
+app.use.biometric-token: false
+
+# WebHook defaults set to local services
+app.webhook.provider.url: http://localhost:8000/api/v1.0/webhook
+app.webhook.provider.apikey: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2JpbGUtZHRkIn0.4EEciRiOb-fFCmNnFhMdqYYDjKekW7AQyWYb6looEMdOzBp3yp30C0NcUx6Ni55y80hWZYUWK2m3FY1pJrUlUQ
+app.webhook.callback.url: http://localhost:8004/api/v1.0/feed/sph
+
+# Gallery Service websocket URL, message size in MB and WS heart beat and connection retry intervals
+app.feeder.ws.url: ws://localhost:8002/gallery
+app.feeder.ws.message.size: 1
+app.feeder.ws.connect.interval: 30
+app.feeder.ws.heartbeat.interval: 45
+app.feeder.ws.disable.ssl: true
+
+# Smart Path Hub access token
+# //57.1.226.8:8443/oauth/token?grant_type=client_credentials
+app.feeder.access.token.url: https://login.microsoftonline.com/sitaspm.onmicrosoft.com/oauth2/v2.0/token
+app.feeder.grant_type: client_credentials
+app.feeder.client_secret: _4_Nt5b3dX~vkLzhXBO0b3_~J5P8V7O_f.
+app.feeder.client_id: 6bc3aeb0-04cb-47cd-b805-1b2554391ff2
+app.feeder.scope: https://sitaspm.onmicrosoft.com/mcs/api/.default
+
+# Smart Path Hub enrol token and registration
+app.feeder.sph.url: https://57.188.61.129/biothenticateRestSvc/rest/enrolmentapi/v1/enrol/
+app.feeder.sph.paths: token,registration
+
+# GalleryService enrol 
+app.feeder.gallery.url: http://localhost:8002/api/v1.0
+app.feeder.gallery.path: feed/gallery
+
+app.mask.logging: false
+# -- above -- updateable via Config API
+
+# Swagger
+swagger.enabled: true
+
+---
+
+spring:
+  config.activate.on-profile: production
+
+# Database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://idm-gallery.cw4k0qxauhaz.eu-west-2.rds.amazonaws.com:3306/feed_service?autoReconnect=true&serverTimezone=UTC&useSSL=false
+    username: sitalab
+    password: sitalab.!s.th3.b35t
+    
+# JPA properties
+  jpa:
+    hibernate:
+      ddl-auto: update 
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+# Production services
+app.webhook.provider.url: https://provider-services.sitalab.io/api/v1.0/webhook
+app.webhook.provider.apikey: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2JpbGUtZHRkIn0.4EEciRiOb-fFCmNnFhMdqYYDjKekW7AQyWYb6looEMdOzBp3yp30C0NcUx6Ni55y80hWZYUWK2m3FY1pJrUlUQ
+app.webhook.callback.url: https://feed-service-eu.sitalab.io/api/v1.0/feed/sph
+
+# Gallery Service websocket URL, message size in MB and WS heart beat and connection retry intervals
+app.feeder.ws.url: wss://gallery-services.sitalab.io/gallery
+app.feeder.ws.message.size: 1
+app.feeder.ws.connect.interval: 30
+app.feeder.ws.heartbeat.interval: 45
+app.feeder.ws.disable.ssl: true
+
+---
+
+spring:
+  config.activate.on-profile: staging
+
+# Database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://sitalab-staging-mysql.ckgclwgufgv7.us-east-2.rds.amazonaws.com:3306/feed_service?autoReconnect=true&serverTimezone=UTC&useSSL=false
+    username: feed
+    password: sitalab.!s.th3.b35t
+    
+# JPA properties
+  jpa:
+    hibernate:
+      ddl-auto: update 
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+# -- below -- updateable via Config API
+# Gallery Service websocket URL, message size in MB and WS heart beat and connection retry intervals
+app.feeder.ws.url: wss://gallery-services-staging.sitalab.io/gallery
+app.feeder.ws.message.size: 1
+app.feeder.ws.connect.interval: 30
+app.feeder.ws.heartbeat.interval: 45
+
+# WebHook properties
+app.webhook.provider.url: https://provider-services-staging.sitalab.io/api/v1.0/webhook
+app.webhook.provider.apikey: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2JpbGUtZHRkIn0.4EEciRiOb-fFCmNnFhMdqYYDjKekW7AQyWYb6looEMdOzBp3yp30C0NcUx6Ni55y80hWZYUWK2m3FY1pJrUlUQ
+app.webhook.callback.url: https://feed-service.sitalab.io/api/v1.0/feed/sph
+
+# Smart Path Hub access token
+app.feeder.access.token.url: https://login.microsoftonline.com/sitaspm.onmicrosoft.com/oauth2/v2.0/token
+app.feeder.grant_type: client_credentials
+app.feeder.client_secret: _4_Nt5b3dX~vkLzhXBO0b3_~J5P8V7O_f.
+app.feeder.client_id: 6bc3aeb0-04cb-47cd-b805-1b2554391ff2
+app.feeder.scope: https://sitaspm.onmicrosoft.com/mcs/api/.default
+
+# Smart Path Hub enrol token and registration
+app.feeder.sph.url: https://57.188.61.129/biothenticateRestSvc/rest/enrolmentapi/v1/enrol/
+app.feeder.sph.paths: token,registration
+# -- above -- updateable via Config API
+
+---
+
+spring:
+  config.activate.on-profile: dev
+
+---
+
+spring:
+  config.activate.on-profile: local
+
+# Database
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/feed_service?autoReconnect=true&serverTimezone=UTC&useSSL=false
+    username: feed
+    password: sitalab.!s.th3.b35t
+    
+# JPA properties
+  jpa:
+    hibernate:
+      ddl-auto: update 
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+
+# Logging
+logging:
+  level:
+    org.springframework: INFO
+    aero.sitalab: DEBUG

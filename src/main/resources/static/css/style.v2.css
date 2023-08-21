@@ -1,0 +1,317 @@
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  margin: 0px;
+  height: 100%;
+}
+
+.center {
+  max-width: 1100px;
+  margin: 30px auto 0 auto;
+  min-height: 75vh; /* will cover the 100% of viewport */
+}
+
+.center2 {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+li {
+  line-height: 22px;
+}
+
+h1 {
+  margin: 20px 0px 10px 0px;
+}
+
+h2 {
+  margin: 15px 0px 8px 0px;
+}
+
+h4 {
+  margin: 10px 0px 5px 0px;
+}
+
+table {
+  width: 100%;
+}
+
+table tbody {
+  width: 100%;
+}
+
+tr {
+  width: 100%;
+}
+
+canvas {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+}
+
+input {
+  padding: 5px;
+  margin: 0px;
+  background-color: transparent;
+  border: none;
+  border-bottom: solid 2px #3654DD;
+  width: 100%;
+  font-size: 16px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+  padding: 5px;
+  margin: 3px;
+  height: 22px;
+  width: 100%;
+  font-size: 16px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #bcbcbc;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #bcbcbc;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #bcbcbc;
+}
+
+.checkboxes input {
+  vertical-align: middle;
+  width:22px;
+}
+
+textarea {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+}
+
+.invisible {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+button {
+  background-color: #3654DD;
+  padding: 8px;
+  font-size: 20px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+[data-title]:hover:after {
+  opacity: 1;
+  transition: all 0.1s ease 0.5s;
+  visibility: visible;
+}
+
+[data-title]:after {
+  content: attr(data-title);
+  background-color: #7dd37d;
+  color: #111;
+  font-size: 100%;
+  position: absolute;
+  padding: 1px 5px 2px 5px;
+  top: 0%;
+  width: 100%;
+  left: 0%;
+  white-space: pre-wrap;
+  box-shadow: 1px 1px 3px #222222;
+  opacity: 0;
+  border: 1px solid #111111;
+  z-index: 99999;
+  visibility: hidden;
+}
+
+[data-title] {
+  position: relative;
+}
+
+.center-in-div {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%, -0%);
+  transform: translate(-50%, -0%);
+}
+
+pre {
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  word-break: break-all;
+}
+
+.third {
+  float: left;
+  width: 25.5%;
+  margin: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.quarter {
+  float: left;
+  width: 19%;
+  margin: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.quarter-real {
+  float: left;
+  width: 25%;
+  margin: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.half {
+  float: left;
+  width: 49%;
+  margin: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.four-quarter {
+  width: 78%;
+  margin: 0px;
+  text-align: center;
+}
+
+.four-quarter-left {
+  width: 78%;
+  margin: 0px;
+}
+
+.four-quarter-middle {
+  width: 78%;
+  margin: auto;
+}
+
+.full-div-align-center {
+  clear: both;
+  width: 100%;
+  margin: 0px;
+  text-align: center;
+}
+
+.full-div-align-left {
+  clear: both;
+  width: 100%;
+  margin: 0px;
+  text-align: left;
+}
+
+.two-quarter {
+  float: left;
+  width: 38.5%;
+  margin: 0px;
+  padding-right: 35px;
+  padding-left: 5px;
+}
+
+.two-quarter2 {
+  float: left;
+  width: 49%;
+  margin: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.full-div {
+  clear: both;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.comparison  {
+  border: 1px solid black;
+}
+
+.schema {
+  color: black;
+}
+.protocol {
+  color: red;
+}
+.crypto-algo {
+  color: rgb(155, 148, 51);
+}
+.signature {
+  color: green;
+}
+.pub-key {
+  color:blue;
+}
+.message {
+  color: rgb(197, 107, 197);
+}
+
+/* Responsive layout - makes a one column layout instead of a two-column layout */
+@media (max-width: 1000px) {
+  .center {
+    width: 100%;
+    margin: 30px 0px 0px 0px;
+    padding: 0px 10px 0px 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
+  }
+  .full-div {
+    flex-direction: column;
+  }
+  .four-quarter {
+    width: 100%;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .two-quarter {
+    width: 100%;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .third {
+    width: 100%;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .quarter {
+    width: 100%;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .half {
+    width: 100%;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .xs-hidden {
+    display: none;
+  }
+}
