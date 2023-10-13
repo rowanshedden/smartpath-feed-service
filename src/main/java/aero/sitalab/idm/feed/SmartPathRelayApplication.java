@@ -58,21 +58,4 @@ public class SmartPathRelayApplication {
 		return MiscUtil.getOrCreateSerializingGsonBuilder();
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate(getClientHttpRequestFactory());
-	}
-
-	/**
-	 * Set timeouts (in milliseconds) for RestTemplate calls
-	 * 
-	 * @return
-	 */
-	private HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory() {
-		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		clientHttpRequestFactory.setConnectTimeout(30_000);
-		clientHttpRequestFactory.setReadTimeout(50_000);
-		return clientHttpRequestFactory;
-	}
-
 }
