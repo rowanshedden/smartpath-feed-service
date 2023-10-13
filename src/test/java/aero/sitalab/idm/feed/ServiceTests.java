@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aero.sitalab.idm.feed.handlers.RestInterface;
+import aero.sitalab.idm.feed.handlers.RestInterfaceHandler;
 import aero.sitalab.idm.feed.services.FeedService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +48,7 @@ public class ServiceTests {
 	FeedService service;
 
 	@Autowired
-	private RestInterface restInterface;
+	private RestInterfaceHandler restInterface;
 
 	@Value("${app.feeder.grant_type}")
 	private String grantType;

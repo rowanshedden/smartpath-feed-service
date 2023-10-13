@@ -4,7 +4,6 @@ import aero.sitalab.idm.feed.models.Action;
 import aero.sitalab.idm.feed.models.dto.BaseResponse;
 import aero.sitalab.idm.feed.models.dto.Error;
 import aero.sitalab.idm.feed.models.dto.GalleryAction;
-import aero.sitalab.idm.feed.services.ConfigurationService;
 import aero.sitalab.idm.feed.services.FeedService;
 import aero.sitalab.idm.feed.utils.MiscUtil;
 import org.slf4j.Logger;
@@ -40,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
 @Component
-public class GalleryWebSocketClient {
+public class WebSocketHandler {
 
     private static final int CONNECTED = 1;
     private static final int NOT_CONNECTED = 0;
@@ -50,8 +49,6 @@ public class GalleryWebSocketClient {
     private final AtomicInteger isConnected = new AtomicInteger(NOT_CONNECTED);
     @Autowired
     private FeedService feedService;
-    @Autowired
-    private ConfigurationService configurationService;
     @Value("${app.use.interface}")
     private String useInterface;
     @Value("${app.use.biometric-token}")
@@ -165,7 +162,6 @@ public class GalleryWebSocketClient {
      * Schedule the keep alive heart beat
      */
     private void scheduleHeartBeat() {
-        heartBeatInterval = Integer.parseInt(configurationService.getLastestConfigurationValue("app.feeder.ws.heartbeat.interval"));
         newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             try {
                 if (isConnected.get() == CONNECTED) {
@@ -188,9 +184,6 @@ public class GalleryWebSocketClient {
      * Schedule the WebSocket connection
      */
     private void scheduleConnection() {
-        connectInterval = Integer.parseInt(configurationService.getLastestConfigurationValue("app.feeder.ws.connect.interval"));
-        messageSize = Integer.parseInt(configurationService.getLastestConfigurationValue("app.feeder.ws.message.size"));
-        webSocketUrl = configurationService.getLastestConfigurationValue("app.feeder.ws.url");
         log.info("scheduling websocket connection in {} seconds", connectInterval);
         newSingleThreadScheduledExecutor().schedule(() -> {
             try {
@@ -208,7 +201,7 @@ public class GalleryWebSocketClient {
     /**
      * Handle the received message - should be a JSON encoded GalleryAction
      *
-     * @param message
+     * @param message TextMessage
      */
     private void handleReceivedMessage(TextMessage message) {
         String json = message.getPayload();
@@ -242,17 +235,16 @@ public class GalleryWebSocketClient {
     }
 
     private boolean useWebSocketInterface() {
-        useInterface = configurationService.getLastestConfigurationValue("app.use.interface");
         return useInterface.equalsIgnoreCase(FeedService.WEBSOCKET_INTERFACE) || useInterface.equalsIgnoreCase(FeedService.BOTH_INTERFACE);
     }
 
     /**
      * Disable SSL Certificate validation for the WebSocket client connection
      *
-     * @param container
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws KeyManagementException
+     * @param container WebSocketContainer
+     * @return WebSocketClient
+     * @throws NoSuchAlgorithmException exception
+     * @throws KeyManagementException exception
      */
     private WebSocketClient createStandardWebSocketClientWithSSLDisabled(WebSocketContainer container) throws NoSuchAlgorithmException, KeyManagementException {
         StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient(container);

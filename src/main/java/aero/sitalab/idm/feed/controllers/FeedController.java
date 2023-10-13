@@ -1,6 +1,6 @@
 package aero.sitalab.idm.feed.controllers;
 
-import aero.sitalab.idm.feed.handlers.GalleryWebSocketClient;
+import aero.sitalab.idm.feed.handlers.WebSocketHandler;
 import aero.sitalab.idm.feed.models.dto.BaseResponse;
 import aero.sitalab.idm.feed.models.dto.Error;
 import aero.sitalab.idm.feed.models.dto.InterfaceResponse;
@@ -8,10 +8,10 @@ import aero.sitalab.idm.feed.models.dto.smartpath.biometrictoken.BiometricTokenR
 import aero.sitalab.idm.feed.models.dto.smartpath.biometrictoken.BiometricTokenResponse;
 import aero.sitalab.idm.feed.models.dto.smartpath.enrolment.EnrolmentRequest;
 import aero.sitalab.idm.feed.models.dto.smartpath.enrolment.EnrolmentResponse;
-import aero.sitalab.idm.feed.services.ConfigurationService;
 import aero.sitalab.idm.feed.services.FeedService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,17 +21,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(tags = {"Feed API"}, description = "Feed service")
+@Api(tags = {"Smart Path Relay API"}, description = "Smart Path relay service")
 public class FeedController extends Api_1_0 {
+
+    @Value("${app.use.interface}")
+    private String useInterface;
 
     @Autowired
     private FeedService feedService;
 
     @Autowired
-    private ConfigurationService configurationService;
-
-    @Autowired
-    private GalleryWebSocketClient galleryWebSocketClient;
+    private WebSocketHandler galleryWebSocketClient;
 
     @ApiOperation(value = "Feed a biometric token to Smart Path", authorizations = {
             @Authorization(value = "Bearer")}, response = BiometricTokenResponse.class)
@@ -66,7 +66,6 @@ public class FeedController extends Api_1_0 {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> showInterface() {
         InterfaceResponse response = new InterfaceResponse();
-        String useInterface = configurationService.getLastestConfigurationValue("app.use.interface");
         if (useInterface.equalsIgnoreCase(FeedService.WEBSOCKET_INTERFACE) || useInterface.equalsIgnoreCase(FeedService.WEBHOOK_INTERFACE) || useInterface.equalsIgnoreCase(FeedService.BOTH_INTERFACE)) {
             response.setActiveinterface(useInterface);
             response.setSuccess(true);

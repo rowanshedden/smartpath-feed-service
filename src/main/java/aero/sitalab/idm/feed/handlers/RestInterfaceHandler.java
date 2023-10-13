@@ -7,7 +7,6 @@ import aero.sitalab.idm.feed.models.dto.smartpath.OauthTokenRequest;
 import aero.sitalab.idm.feed.models.dto.smartpath.OauthTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,7 @@ import javax.annotation.PostConstruct;
 import java.time.Instant;
 
 @Component
-public class RestInterface {
+public class RestInterfaceHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -36,7 +35,9 @@ public class RestInterface {
     /**
      * Call the Oauth server to get the access token for Smart Path Hub API
      *
-     * @param request
+     * @param accessTokenUrl String
+     * @param request OauthTokenRequest
+     * @return OauthTokenResponse
      */
     public OauthTokenResponse call(String accessTokenUrl, OauthTokenRequest request) {
         if (token != null) {
@@ -72,11 +73,11 @@ public class RestInterface {
     /**
      * Call the API
      *
-     * @param domain
-     * @param path
-     * @param httpMethod
-     * @param body
-     * @return
+     * @param domain String
+     * @param path String
+     * @param httpMethod HttpMethod
+     * @param body String
+     * @return RawHttpResult
      */
     public RawHttpResult call(String domain, String path, HttpMethod httpMethod, String body) {
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -88,13 +89,13 @@ public class RestInterface {
         try {
             switch (httpMethod.name().toUpperCase()) {
                 case "GET":
-                    result = doGet(url, result);
+                    doGet(url, result);
                     break;
                 case "POST":
-                    result = doPost(url, body, result);
+                    doPost(url, body, result);
                     break;
                 case "PUT":
-                    result = doPut(url, body, result);
+                    doPut(url, body, result);
                     break;
                 case "DELETE":
                     doDelete(url);
@@ -106,29 +107,26 @@ public class RestInterface {
         return result;
     }
 
-    private RawHttpResult doGet(String url, RawHttpResult result) {
+    private void doGet(String url, RawHttpResult result) {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
-        result = this.processResult(url, response, result);
-        return result;
+        this.processResult(url, response, result);
     }
 
-    private RawHttpResult doPost(String url, String body, RawHttpResult result) {
+    private void doPost(String url, String body, RawHttpResult result) {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<String>(body, headers), String.class);
-        result = this.processResult(url, response, result);
-        return result;
+        this.processResult(url, response, result);
     }
 
-    private RawHttpResult doPut(String url, String body, RawHttpResult result) {
+    private void doPut(String url, String body, RawHttpResult result) {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<String>(body, headers), String.class);
-        result = this.processResult(url, response, result);
-        return result;
+        this.processResult(url, response, result);
     }
 
     private void doDelete(String url) {
         restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
     }
 
-    private RawHttpResult processResult(String url, ResponseEntity<String> response, RawHttpResult result) {
+    private void processResult(String url, ResponseEntity<String> response, RawHttpResult result) {
         result.setHttpStatus("" + response.getStatusCodeValue());
         result.setBody(response.getBody());
         if (response.getStatusCodeValue() > 200) {
@@ -142,7 +140,6 @@ public class RestInterface {
         } else {
             result.setSuccess(true);
         }
-        return result;
     }
 
 }

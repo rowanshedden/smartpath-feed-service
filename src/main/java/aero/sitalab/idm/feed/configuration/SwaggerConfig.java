@@ -33,7 +33,7 @@ public class SwaggerConfig {
 	/**
 	 * Swagger configuration
 	 *
-	 * @return
+	 * @return Docket
 	 */
 	@Bean
 	public Docket api() {
@@ -44,31 +44,10 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfo("SITA Identity Management Smart Path Feeder Service", "smartpath-feeder-callbackService", "1.0",
+		return new ApiInfo("Smart Path Relay", "smart-path-relay", "1.0",
 				"https://www.sita.aero/legal/sita-suppliers/terms-and-conditions/",
-				new Contact("SITA Lab", "https://www.sita.aero/stories/sita-stories/lessons-from-the-lab/", "rowan.shedden@sita.aero"),
+				new Contact("CEC Singapore", "https://www.sita.aero/about-us/contact-us/customer-experience-centers/singapore-cec/", "yudhy.wijaya@sita.aero"),
 				"© 2023 SITA, all rights reserved", "https://www.sita.aero", Collections.emptyList());
-	}
-
-	private ApiKey apiKey() {
-		return new ApiKey("Bearer", HttpHeaders.AUTHORIZATION, "header");
-	}
-
-	private SecurityContext securityContext() {
-		return SecurityContext.builder().securityReferences(securityReferences()).forPaths(PathSelectors.regex("/api.*")).build();
-	}
-
-	private List<SecurityScheme> securitySchemes() {
-		List<SecurityScheme> securitySchemes = new ArrayList<>();
-		securitySchemes.add(apiKey());
-		return securitySchemes;
-	}
-
-	private List<SecurityReference> securityReferences() {
-		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-		authorizationScopes[0] = authorizationScope;
-		return Arrays.asList(new SecurityReference("Bearer", authorizationScopes));
 	}
 
 }

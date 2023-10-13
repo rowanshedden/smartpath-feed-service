@@ -2,7 +2,6 @@ package aero.sitalab.idm.feed;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
@@ -26,7 +25,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableScheduling
 @EnableSwagger2
 @SpringBootApplication(scanBasePackages = "aero.sitalab.idm")
-public class FeedServiceApplication {
+public class SmartPathRelayApplication {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -37,7 +36,7 @@ public class FeedServiceApplication {
 	String version;
 
 	public static void main(String[] args) {
-		SpringApplication.run(FeedServiceApplication.class, args);
+		SpringApplication.run(SmartPathRelayApplication.class, args);
 	}
 
 	@Bean

@@ -15,19 +15,9 @@ public class WebAppConfig implements WebMvcConfigurer {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	private CorsConfig corsConfig;
-
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("forward:/index.html");
-	}
-
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		String[] origins = corsConfig.getCors().getOrigins().toArray(String[]::new);
-		logger.info("CORS origins: " + Arrays.toString(origins));
-		registry.addMapping("/**").allowedOrigins(origins);
 	}
 
 }

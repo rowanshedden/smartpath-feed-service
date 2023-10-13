@@ -3,9 +3,6 @@ package aero.sitalab.idm.feed.models.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Lob;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import aero.sitalab.idm.feed.models.IBiographic;
@@ -79,32 +76,22 @@ public class DigitalTravelCredential implements IBiographic {
 	private String mrz;
 
 	@JsonProperty("liv")
-	@Lob
-	@Column(name = "liveImage", length = 5242880) // 5MB
 	@ApiModelProperty(value = "Base64 encoded live face image of traveller (selfie)")
 	private String liveImage;
 
 	@JsonProperty("viz")
-	@Lob
-	@Column(name = "vizImage", length = 5242880) // 5MB
 	@ApiModelProperty(value = "Base64 encoded viz image of traveller (visible passport page image)")
 	private String vizImage;
 
 	@JsonProperty("chp")
-	@Lob
-	@Column(name = "chipImage", length = 5242880) // 5MB
 	@ApiModelProperty(value = "Base64 encoded passport face image of traveller (passport chip)")
 	private String chipImage;
 
 	@JsonProperty("lds")
-	@Lob
-	@Column(name = "lds", length = 5242880) // 5MB
 	@ApiModelProperty(value = "Logical Data Structure from passport chip (byte array)")
 	private Byte[] lds;
 
 	@JsonProperty("sod")
-	@Lob
-	@Column(name = "sod", length = 5242880) // 5MB
 	@ApiModelProperty(value = "Digital Signature from passport chip (byte array)")
 	private Byte[] sod;
 

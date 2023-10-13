@@ -19,10 +19,10 @@ import aero.sitalab.idm.feed.models.dto.ValidationErrorMessage;
 @RequestMapping("/api/v1.0")
 public class Api_1_0 {
 
-	@Value("${app.name:SITA Identity Management Credential Services}")
+	@Value("${app.name}")
 	String app;
 
-	@Value("${app.version:1.0}")
+	@Value("${app.version}")
 	String version;
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

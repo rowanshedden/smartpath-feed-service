@@ -25,7 +25,7 @@ public class MaskLoggingFilter extends PatternLayout {
 	private boolean isMaskLogging;
 
 	private Pattern multilinePattern;
-	private List<String> maskPatterns = new ArrayList<>();
+	private final List<String> maskPatterns = new ArrayList<>();
 
 	public void addMaskPattern(String maskPattern) {
 		maskPatterns.add(maskPattern);
