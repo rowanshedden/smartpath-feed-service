@@ -1,5 +1,5 @@
 spring:
-    
+
 server:
   port: 8004
 
@@ -19,21 +19,22 @@ app.agent.label: Smart Path Relay
 app.agent.apikey: sitalab.!s.th3.b35t
 
 # Interface to be used, options are: websocket / webhook / both
-app.use.interface: websocket
+app.use.interface: none
 
 # Type of enrolment, options are: true (use biometric token API), false (use enrolment API)
 app.use.biometric-token: false
 
-# WebHook properties
-app.webhook.provider.url: https://provider-services-staging.sitalab.io/api/v1.0/webhook
+# WebHook defaults set to local services
+app.webhook.provider.url: http://localhost:8000/api/v1.0/webhook
 app.webhook.provider.apikey: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2JpbGUtZHRkIn0.4EEciRiOb-fFCmNnFhMdqYYDjKekW7AQyWYb6looEMdOzBp3yp30C0NcUx6Ni55y80hWZYUWK2m3FY1pJrUlUQ
-app.webhook.callback.url: https://feed-service.sitalab.io/api/v1.0/feed/sph
+app.webhook.callback.url: http://localhost:8004/api/v1.0/feed/sph
 
 # Gallery Service websocket URL, message size in MB and WS heart beat and connection retry intervals
-app.feeder.ws.url: wss://gallery-services-staging.sitalab.io/gallery
+app.feeder.ws.url: ws://localhost:8002/gallery
 app.feeder.ws.message.size: 1
 app.feeder.ws.connect.interval: 30
 app.feeder.ws.heartbeat.interval: 45
+app.feeder.ws.disable.ssl: true
 
 # Smart Path Hub access token
 app.feeder.access.token.url: https://57.1.226.8:8443/oauth/token?grant_type=client_credentials
@@ -53,25 +54,3 @@ app.mask.logging: false
 
 # Swagger
 swagger.enabled: true
-
----
-
-spring:
-  config.activate.on-profile: local
-
-# Logging options
-logging:
-  level:
-    aero.sita: DEBUG
-
-# WebHook defaults set to local services
-app.webhook.provider.url: http://localhost:8000/api/v1.0/webhook
-app.webhook.provider.apikey: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb2JpbGUtZHRkIn0.4EEciRiOb-fFCmNnFhMdqYYDjKekW7AQyWYb6looEMdOzBp3yp30C0NcUx6Ni55y80hWZYUWK2m3FY1pJrUlUQ
-app.webhook.callback.url: http://localhost:8004/api/v1.0/feed/sph
-
-# Gallery Service websocket URL, message size in MB and WS heart beat and connection retry intervals
-app.feeder.ws.url: ws://localhost:8002/gallery
-app.feeder.ws.message.size: 1
-app.feeder.ws.connect.interval: 30
-app.feeder.ws.heartbeat.interval: 45
-app.feeder.ws.disable.ssl: true

@@ -1,10 +1,12 @@
 package aero.sitalab.idm.feed.models.dto.smartpath;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import aero.sitalab.idm.feed.models.dto.BaseRequest;
 import lombok.*;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,6 +26,11 @@ public class OauthTokenRequest extends BaseRequest {
 	@JsonProperty("scope")
 	public String scope;
 
+	@JsonProperty("username")
+	public String username;
+
+	@JsonProperty("password")
+	public String password;
 
 	public String toFormUrlEncoded() {
 		String body = "grant_type=" + this.grantType;

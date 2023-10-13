@@ -40,6 +40,7 @@ public class RestInterfaceHandler {
      * @return OauthTokenResponse
      */
     public OauthTokenResponse call(String accessTokenUrl, OauthTokenRequest request) {
+        // check the local cache to re-use an unexpired token
         if (token != null) {
             long accessTokenExpiry = token.getExpiresIn();
             long secondsSinceLastAccess = (Instant.now().getEpochSecond() - lastAccessInSeconds);
@@ -49,7 +50,7 @@ public class RestInterfaceHandler {
                 getToken(accessTokenUrl, request);
             }
         } else {
-            token = OauthTokenResponse.builder().build();
+            // not in cache, get a token
             getToken(accessTokenUrl, request);
         }
         return token;

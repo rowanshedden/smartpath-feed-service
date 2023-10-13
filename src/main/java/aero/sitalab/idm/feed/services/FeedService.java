@@ -59,6 +59,15 @@ public class FeedService {
     @Value("${app.feeder.scope}")
     private String scope;
 
+    @Value("${app.feeder.access_type}")
+    private String accessType;
+
+    @Value("${app.feeder.username}")
+    private String username;
+
+    @Value("${app.feeder.password}")
+    private String password;
+
     private String[] smartPathHubPath;
 
     /**
@@ -116,17 +125,19 @@ public class FeedService {
                 .travelDocumentNumber(galleryRecord.getDtc().getDocumentType() + galleryRecord.getDtc().getDocumentNumber())
                 .build();
         travelDocumentInfos.add(travelDocumentInfo);
+        String airportCode = (galleryRecord.getItinerary() != null && !galleryRecord.getItinerary().getRouteDetails().isEmpty())
+                ? galleryRecord.getItinerary().getRouteDetails().get(0).getArrival().getPortCode()
+                : "";
         GroupInfo groupInfo = GroupInfo.builder()
-                .airportCode(galleryRecord.getItinerary().getRouteDetails().get(0).getArrival().getPortCode())
+                .airportCode(airportCode)
                 .location("")
                 .terminal("")
                 .build();
 
         /*
          * construct a EnrolmentRequest object
-         */
-        /*
-        {
+         * example below:
+{
   "messageId": "c87ab2b1-a22e-411c-8e54-ce4ee829c1d5",
   "correlationId": "300f6c30-9004-4b28-b156-a913ef469f70",
   "messageTs": "2020-02-04T21:31:50.123Z",
@@ -158,7 +169,8 @@ public class FeedService {
   "BCBP": "M1ANDREWS/CONNOR      EVGUM42 PEKHNDJL 0022 173Y061D0106 348>3180  9260B1A 01313064030012913121336002510 JL JL 332188577           8",
   "MRZ": "P<IRLANDREWS<<CONNOR<<<<<<<<<<<<<<<<<<<<<<<<PP59926157IRL8111100M2612096<<<<<<<<<<<<<<04"
 }
-         */
+*
+*/
         EnrolmentRequest enrolmentRequest = EnrolmentRequest.builder()
                 .messageId(UUID.randomUUID().toString())
                 .messageTs((String.valueOf(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))))
@@ -184,7 +196,21 @@ public class FeedService {
          *  obtain the JWT (only valid for an hour)
          */
         try {
-            OauthTokenResponse accessTokenResponse = restInterface.call(accessTokenUrl, new OauthTokenRequest(grantType, clientSecret, clientId, scope));
+            OauthTokenRequest oauthTokenRequest;
+            if (accessType.equalsIgnoreCase("basic")) {
+                oauthTokenRequest = OauthTokenRequest.builder()
+                        .username(username)
+                        .password(password)
+                        .build();
+            } else {
+                oauthTokenRequest = OauthTokenRequest.builder()
+                        .grantType(grantType)
+                        .clientSecret(clientSecret)
+                        .clientId(clientId)
+                        .scope(scope)
+                        .build();
+            }
+            OauthTokenResponse accessTokenResponse = restInterface.call(accessTokenUrl, oauthTokenRequest);
             if (accessTokenResponse.getAccessToken() == null) {
                 String errorMessage = "Unable to obtain JWT";
                 log.error(errorMessage);
@@ -297,7 +323,13 @@ public class FeedService {
          *  obtain the JWT (only valid for an hour)
          */
         try {
-            OauthTokenResponse accessTokenResponse = restInterface.call(accessTokenUrl, new OauthTokenRequest(grantType, clientSecret, clientId, scope));
+            OauthTokenRequest oauthTokenRequest = OauthTokenRequest.builder()
+                    .grantType(grantType)
+                    .clientSecret(clientSecret)
+                    .clientId(clientId)
+                    .scope(scope)
+                    .build();
+            OauthTokenResponse accessTokenResponse = restInterface.call(accessTokenUrl, oauthTokenRequest);
             log.debug("Oauth token: {}", accessTokenResponse.getAccessToken());
         } catch (Exception e) {
             String errorMessage = "Unable to obtain JWT: " + e.getLocalizedMessage();
