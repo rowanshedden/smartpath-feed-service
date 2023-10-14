@@ -8,17 +8,25 @@ import aero.sitalab.idm.feed.models.dto.smartpath.OauthTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
+import java.util.Base64;
 
 @Component
 public class RestInterfaceHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${app.feeder.username}")
+    private String username;
+
+    @Value("${app.feeder.password}")
+    private String password;
 
     @Autowired
     RestTemplate restTemplate;
@@ -46,19 +54,22 @@ public class RestInterfaceHandler {
             long secondsSinceLastAccess = (Instant.now().getEpochSecond() - lastAccessInSeconds);
             logger.debug("Access token secondsSinceLastAccess: {}, accessTokenExpiry: {}", secondsSinceLastAccess, accessTokenExpiry - 1);
             if (secondsSinceLastAccess >= accessTokenExpiry - 1) {
-                logger.debug("Access token being refreshed ...");
+                logger.debug("Access token being refreshed...");
                 getToken(accessTokenUrl, request);
             }
         } else {
             // not in cache, get a token
             getToken(accessTokenUrl, request);
         }
+        logger.debug("Access token: {}", token.toJson());
         return token;
     }
 
     private void getToken(String accessTokenUrl, OauthTokenRequest request) {
         try {
+            headers.setBasicAuth(username, password);
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            logger.debug("Access token headers: {}", headers.toSingleValueMap().toString());
             ResponseEntity<OauthTokenResponse> result = restTemplate.exchange(accessTokenUrl, HttpMethod.POST,
                     new HttpEntity<String>(request.toFormUrlEncoded(), headers), OauthTokenResponse.class);
             token = result.getBody();
@@ -83,10 +94,10 @@ public class RestInterfaceHandler {
     public RawHttpResult call(String domain, String path, HttpMethod httpMethod, String body) {
         headers.setContentType(MediaType.APPLICATION_JSON);
         RawHttpResult result = new RawHttpResult();
-
         if (!path.startsWith("/"))
             path = "/" + path;
         String url = domain + path;
+        logger.debug("API call URL: {}, method: {}, body: {}", url, httpMethod.name(), body);
         try {
             switch (httpMethod.name().toUpperCase()) {
                 case "GET":
@@ -99,7 +110,7 @@ public class RestInterfaceHandler {
                     doPut(url, body, result);
                     break;
                 case "DELETE":
-                    doDelete(url);
+                    doDelete(url, result);
                     break;
             }
         } catch (Exception e) {
@@ -123,13 +134,15 @@ public class RestInterfaceHandler {
         this.processResult(url, response, result);
     }
 
-    private void doDelete(String url) {
-        restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+    private void doDelete(String url, RawHttpResult result) {
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        this.processResult(url, response, result);
     }
 
     private void processResult(String url, ResponseEntity<String> response, RawHttpResult result) {
         result.setHttpStatus("" + response.getStatusCodeValue());
         result.setBody(response.getBody());
+        logger.debug("API result HTTP: {}, body: {}", result.getHttpStatus(), result.getBody());
         if (response.getStatusCodeValue() > 200) {
             Error error = new Error();
             error.setField(url);

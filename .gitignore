@@ -2,7 +2,7 @@
 /logs/
 .DS_Store
 !.mvn/wrapper/maven-wrapper.jar
-credential-services.log.*
+application.log.*
 
 ### Eclipse/STS ###
 .apt_generated

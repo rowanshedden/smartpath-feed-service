@@ -8,7 +8,7 @@ logging:
   dump-headers: false
   level:
     org.springframework: INFO
-    aero.sita: INFO
+    aero.sitalab: DEBUG
 
 # App properties
 app.name: Smart Path Relay

@@ -8,7 +8,7 @@ logging:
   dump-headers: false
   level:
     org.springframework: INFO
-    aero.sita: INFO
+    aero.sitalab: INFO
 
 # App properties
 app.name: Smart Path Relay
@@ -62,7 +62,7 @@ spring:
 # Logging options
 logging:
   level:
-    aero.sita: DEBUG
+    aero.sitalab: DEBUG
 
 # WebHook defaults set to local services
 app.webhook.provider.url: http://localhost:8000/api/v1.0/webhook

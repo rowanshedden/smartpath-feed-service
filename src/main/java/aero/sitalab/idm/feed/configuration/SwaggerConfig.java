@@ -46,7 +46,7 @@ public class SwaggerConfig {
 	private ApiInfo apiInfo() {
 		return new ApiInfo("Smart Path Relay", "smart-path-relay", "1.0",
 				"https://www.sita.aero/legal/sita-suppliers/terms-and-conditions/",
-				new Contact("CEC Singapore", "https://www.sita.aero/about-us/contact-us/customer-experience-centers/singapore-cec/", "yudhy.wijaya@sita.aero"),
+				new Contact("CEC Singapore (Yudhy Wijaya)", "https://www.sita.aero/about-us/contact-us/customer-experience-centers/singapore-cec/", "yudhy.wijaya@sita.aero"),
 				"© 2023 SITA, all rights reserved", "https://www.sita.aero", Collections.emptyList());
 	}
 
